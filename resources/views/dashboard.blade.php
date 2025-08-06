@@ -90,5 +90,44 @@
                 }
             });
         </script>
+        <script>
+            const currentUserId = {{ Auth::id() }}; // Get logged in user's ID from Blade
+
+            window.Echo.private(`notifications.${currentUserId}`)
+                .listen('RealTimeNotification', (e) => {
+                    console.log(e); // Check console to see if event is received
+
+                    // Play a sound
+                    new Audio('/sounds/notification.mp3').play(); // We will add this sound file
+
+                    // Show a toaster notification (using a simple custom function)
+                    showToast(e.message, e.type);
+
+                    // You can also update a notification dropdown here
+                });
+
+            function showToast(message, type = 'info') {
+                const toastContainer = document.getElementById('toast-container');
+                if (!toastContainer) {
+                    const container = document.createElement('div');
+                    container.id = 'toast-container';
+                    container.style.position = 'fixed';
+                    container.style.top = '20px';
+                    container.style.right = '20px';
+                    container.style.zIndex = '1000';
+                    document.body.appendChild(container);
+                }
+
+                const toast = document.createElement('div');
+                toast.className = `p-4 mb-2 text-white rounded-lg shadow-lg ${type === 'success' ? 'bg-green-500' : 'bg-blue-500'}`;
+                toast.innerText = message;
+
+                document.getElementById('toast-container').appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 5000);
+            }
+        </script>
     @endpush
 </x-app-layout>

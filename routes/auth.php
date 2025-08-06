@@ -56,4 +56,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::get('/profile', function() {
+        return 'This is the profile page.'; // Yahan profile view return kar sakte hain
+    })->name('profile.edit');
 });
